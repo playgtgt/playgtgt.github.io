@@ -14,7 +14,7 @@
             display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
 
-        /* --- Shared Animations --- */
+        /* --- Animations --- */
         @keyframes float {
             0%, 100% { transform: translate3d(0, 0, 0); }
             50% { transform: translate3d(0, -15px, 0); }
@@ -26,31 +26,25 @@
         }
 
         @keyframes boxPulse {
-            0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.1), 0 25px 50px rgba(0,0,0,0.4); border-color: rgba(255, 215, 0, 0.2); }
-            50% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.3), 0 25px 50px rgba(0,0,0,0.4); border-color: rgba(255, 215, 0, 0.5); }
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.1), 0 25px 50px rgba(0,0,0,0.4); border-color: rgba(255, 215, 0, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.3), 0 25px 50px rgba(0,0,0,0.4); border-color: rgba(255, 215, 0, 0.6); }
         }
 
-        /* --- Elements --- */
+        /* --- UI Elements --- */
         .live-counter {
-            font-family: 'Fredoka One', cursive;
-            font-size: 1.2rem;
-            margin-bottom: 15px;
+            font-family: 'Fredoka One', cursive; font-size: 1.2rem; margin-bottom: 15px;
             background: linear-gradient(to bottom, #fff700, #ffcc00);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            /* Syncing float with the box */
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             animation: float 6s ease-in-out infinite;
-            filter: drop-shadow(2px 2px 0px rgba(0,0,0,0.5));
-            letter-spacing: 1px;
+            filter: drop-shadow(2px 2px 0px rgba(0,0,0,0.5)); letter-spacing: 1px;
         }
 
         .box { 
             position: relative; z-index: 10;
             background: rgba(255, 255, 255, 0.12); 
             border: 1px solid rgba(255, 215, 0, 0.3);
-            padding: 45px; border-radius: 40px; width: 90%; max-width: 440px; 
+            padding: 40px; border-radius: 40px; width: 90%; max-width: 420px; 
             text-align: center; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            /* Combined floating and pulsing glow */
             animation: float 6s ease-in-out infinite, boxPulse 4s ease-in-out infinite;
         }
 
@@ -58,34 +52,42 @@
             font-family: 'Fredoka One', cursive; font-size: 5.5rem; margin: 0;
             background: linear-gradient(to bottom, #fff700 0%, #ffcc00 50%, #ff9900 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            animation: goldGlow 3s ease-in-out infinite;
-            line-height: 1;
+            animation: goldGlow 3s ease-in-out infinite; line-height: 1;
         }
 
-        .subtitle { font-size: 1rem; color: rgba(255,255,255,0.8); margin: 10px 0 30px 0; }
+        .subtitle { font-size: 0.95rem; color: rgba(255,255,255,0.7); margin: 10px 0 25px 0; }
 
-        /* Host Area */
-        .hosts-wrapper { position: relative; margin-bottom: 25px; }
+        .hosts-wrapper { position: relative; margin-bottom: 20px; }
         .hosts-container { background: rgba(0, 0, 0, 0.6); padding: 20px; border-radius: 20px; border: 1px solid rgba(255, 215, 0, 0.1); text-align: left; }
-        code { color: #ffd700; font-family: 'Courier New', monospace; font-size: 0.85rem; line-height: 1.5; display: block; white-space: pre; }
+        code { color: #ffd700; font-family: 'Courier New', monospace; font-size: 0.8rem; line-height: 1.5; display: block; white-space: pre; }
 
         .copy-btn {
             position: absolute; top: 10px; right: 10px;
-            background: rgba(255, 215, 0, 0.15); border: 1px solid rgba(255, 215, 0, 0.3);
-            color: #ffd700; padding: 5px 12px; border-radius: 12px; font-size: 0.7rem; cursor: pointer; transition: 0.3s;
+            background: rgba(255, 215, 0, 0.1); border: 1px solid rgba(255, 215, 0, 0.3);
+            color: #ffd700; padding: 5px 12px; border-radius: 10px; font-size: 0.65rem; cursor: pointer; transition: 0.3s;
         }
-        .copy-btn:hover { background: rgba(255, 215, 0, 0.3); }
+
+        /* --- Buttons --- */
+        .btn-group { display: flex; flex-direction: column; gap: 12px; }
 
         .btn { 
-            background: #5865F2; color: white; padding: 18px; text-decoration: none; 
-            border-radius: 50px; font-weight: 600; display: flex; align-items: center;
-            justify-content: center; gap: 12px; transition: 0.4s ease; font-size: 1.1rem;
+            padding: 16px; text-decoration: none; border-radius: 50px; 
+            font-weight: 600; display: flex; align-items: center; justify-content: center; 
+            gap: 10px; transition: 0.3s ease; font-size: 1rem;
         }
-        .btn:hover { background: #4752c4; transform: scale(1.03); box-shadow: 0 10px 20px rgba(88, 101, 242, 0.3); }
 
-        .footer { margin-top: 30px; font-size: 0.75rem; color: rgba(255,255,255,0.3); font-weight: 600; letter-spacing: 1px; }
+        .btn-discord { background: #5865F2; color: white; }
+        .btn-discord:hover { background: #4752c4; transform: scale(1.02); }
 
-        /* Particles */
+        .btn-tutorial { 
+            background: rgba(255, 215, 0, 0.05); 
+            border: 2px solid rgba(255, 215, 0, 0.4); 
+            color: #ffd700; 
+        }
+        .btn-tutorial:hover { background: rgba(255, 215, 0, 0.15); border-color: #ffd700; transform: scale(1.02); }
+
+        .footer { margin-top: 30px; font-size: 0.7rem; color: rgba(255,255,255,0.3); font-weight: 600; letter-spacing: 1px; }
+
         .particles { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
         .particle { position: absolute; bottom: -20px; background: rgba(255, 215, 0, 0.2); border-radius: 50%; animation: drift linear infinite; }
         @keyframes drift { from { transform: translateY(0); opacity: 0; } 20% { opacity: 0.3; } to { transform: translateY(-110vh); opacity: 0; } }
@@ -110,10 +112,17 @@
             </div>
         </div>
 
-        <a href="https://discord.gg/qkaVBCUrna" class="btn">
-            <svg style="width:22px;height:22px;fill:white" viewBox="0 0 127.14 96.36"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.06,72.06,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.71,32.65-1.82,56.6.39,80.21a105.73,105.73,0,0,0,32.17,16.15,77.7,77.7,0,0,0,6.89-11.11,68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1,105.25,105.25,0,0,0,32.19-16.14c2.64-27.38-4.52-51.06-19.73-72.13ZM42.48,65.69c-6.3,0-11.48-5.78-11.48-12.89S36.1,39.9,42.48,39.9s11.48,5.78,11.48,12.89S48.86,65.69,42.48,65.69Zm42.24,0c-6.3,0-11.48-5.78-11.48-12.89S78.34,39.9,84.72,39.9s11.48,5.78,11.48,12.89S91.1,65.69,84.72,65.69Z"/></svg>
-            Join Discord
-        </a>
+        <div class="btn-group">
+            <a href="https://discord.gg/qkaVBCUrna" target="_blank" class="btn btn-discord">
+                <svg style="width:20px;height:20px;fill:white" viewBox="0 0 127.14 96.36"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.06,72.06,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.71,32.65-1.82,56.6.39,80.21a105.73,105.73,0,0,0,32.17,16.15,77.7,77.7,0,0,0,6.89-11.11,68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1,105.25,105.25,0,0,0,32.19-16.14c2.64-27.38-4.52-51.06-19.73-72.13ZM42.48,65.69c-6.3,0-11.48-5.78-11.48-12.89S36.1,39.9,42.48,39.9s11.48,5.78,11.48,12.89S48.86,65.69,42.48,65.69Zm42.24,0c-6.3,0-11.48-5.78-11.48-12.89S78.34,39.9,84.72,39.9s11.48,5.78,11.48,12.89S91.1,65.69,84.72,65.69Z"/></svg>
+                Join Discord
+            </a>
+
+            <a href="https://discord.gg/WNr99UZtSe" target="_blank" class="btn btn-tutorial">
+                <svg style="width:20px;height:20px;fill:currentColor" viewBox="0 0 24 24"><path d="M12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2Zm1,15H11V11h2Zm0-8H11V7h2Z"/></svg>
+                How To Join
+            </a>
+        </div>
     </div>
 
     <div class="footer">DEVELOPED BY GTGT TEAM &copy; 2026</div>
