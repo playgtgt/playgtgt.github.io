@@ -5,16 +5,13 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:wght@400;600&display=swap');
 
-        /* Animation Keyframes */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* Keeps particles inside */
+            background: #000;
         }
 
         body { 
@@ -23,30 +20,69 @@
             background-size: cover; 
             color: white; 
             font-family: 'Poppins', sans-serif; 
-            margin: 0;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            overflow: hidden;
+            -webkit-font-smoothing: antialiased; /* Makes text smooth */
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Smooth Floating Animation */
+        @keyframes float {
+            0% { transform: translate3d(0, 0, 0); }
+            50% { transform: translate3d(0, -15px, 0); }
+            100% { transform: translate3d(0, 0, 0); }
+        }
+
+        /* Subtle Fade In */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translate3d(0, 20px, 0); }
+            to { opacity: 1; transform: translate3d(0, 0, 0); }
+        }
+
+        /* Particle Animation */
+        @keyframes drift {
+            from { transform: translateY(0) rotate(0deg); opacity: 0; }
+            50% { opacity: 0.5; }
+            to { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            bottom: -10px;
+            background: rgba(255, 215, 0, 0.4);
+            border-radius: 50%;
+            animation: drift linear infinite;
         }
 
         .box { 
-            /* Light, Bubbly, Transparent Background */
-            background: rgba(255, 255, 255, 0.15); 
-            border: 1px solid rgba(255, 255, 255, 0.3); 
+            position: relative;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.12); 
+            border: 1px solid rgba(255, 255, 255, 0.2); 
             padding: 40px; 
-            border-radius: 30px; 
+            border-radius: 40px; 
             width: 90%;
-            max-width: 480px; 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2); 
+            max-width: 460px; 
             text-align: center;
-            backdrop-filter: blur(20px); /* The "Glass" effect */
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(15px); /* Slightly lower blur for better FPS */
+            -webkit-backdrop-filter: blur(15px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
             
-            /* Animations */
-            animation: fadeInUp 1s ease-out forwards, float 5s ease-in-out infinite;
+            /* Performance Optimization */
+            will-change: transform;
+            animation: fadeIn 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards, 
+                       float 6s ease-in-out infinite;
         }
 
         h1 { 
@@ -56,93 +92,69 @@
             background: linear-gradient(to bottom, #fff700 0%, #ffcc00 50%, #ff9900 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(4px 4px 0px rgba(0,0,0,0.5));
-            letter-spacing: 2px;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+            letter-spacing: 1px;
         }
 
         .subtitle {
             font-size: 1.1rem;
-            color: #fff;
-            margin-top: -5px;
+            color: rgba(255,255,255,0.9);
             margin-bottom: 30px;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
             font-weight: 500;
         }
 
-        .section-label {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.8);
-            letter-spacing: 2px;
-            margin-bottom: 12px;
-            font-weight: 600;
-        }
-
         .hosts-container { 
-            /* Darker semi-transparent bubble for the code */
-            background: rgba(0, 0, 0, 0.3); 
+            background: rgba(0, 0, 0, 0.4); 
             padding: 20px; 
-            border-radius: 15px; 
-            border: 1px solid rgba(255, 255, 255, 0.1); 
+            border-radius: 20px; 
+            border: 1px solid rgba(255, 215, 0, 0.2); 
             margin-bottom: 25px; 
             text-align: left; 
         }
 
         code { 
-            /* Changed from Green to Golden Yellow */
             color: #ffd700; 
             font-family: 'Courier New', monospace; 
             font-size: 0.95rem; 
             line-height: 1.6;
             display: block;
             white-space: pre;
-            text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
         }
 
         .btn { 
             background: #5865F2; 
             color: white; 
-            padding: 16px; 
+            padding: 18px; 
             text-decoration: none; 
-            border-radius: 50px; /* Bubbly rounded button */
+            border-radius: 50px; 
             font-weight: 600; 
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 12px; 
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); 
             font-size: 1.1rem;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
 
         .btn:hover { 
             background: #4752c4; 
-            transform: scale(1.05);
-            box-shadow: 0 15px 30px rgba(88, 101, 242, 0.4);
+            transform: scale(1.03) translate3d(0, -2px, 0);
+            box-shadow: 0 10px 25px rgba(88, 101, 242, 0.4);
         }
 
-        .discord-icon {
-            width: 24px;
-            height: 24px;
-            fill: white;
-        }
-
-        .footer {
-            margin-top: 40px;
-            font-size: 0.8rem;
-            color: rgba(255,255,255,0.6);
-            letter-spacing: 1px;
-            font-weight: 600;
-        }
+        .discord-icon { width: 24px; height: 24px; fill: white; }
+        .footer { margin-top: 40px; font-size: 0.8rem; color: rgba(255,255,255,0.5); font-weight: 600; }
     </style>
 </head>
 <body>
+
+    <div class="particles" id="particle-container"></div>
 
     <div class="box">
         <h1>GTGT</h1>
         <p class="subtitle">The Growtopia experience, evolved.</p>
         
-        <div class="section-label">Server Connection</div>
         <div class="hosts-container">
             <code>91.134.85.13 growtopia1.com
 91.134.85.13 growtopia2.com
@@ -151,14 +163,37 @@
         </div>
 
         <a href="https://discord.gg/qkaVBCUrna" class="btn">
-            <svg class="discord-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 127.14 96.36">
-                <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.06,72.06,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.71,32.65-1.82,56.6.39,80.21a105.73,105.73,0,0,0,32.17,16.15,77.7,77.7,0,0,0,6.89-11.11,68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1,105.25,105.25,0,0,0,32.19-16.14c2.64-27.38-4.52-51.06-19.73-72.13ZM42.48,65.69c-6.3,0-11.48-5.78-11.48-12.89S36.1,39.9,42.48,39.9s11.48,5.78,11.48,12.89S48.86,65.69,42.48,65.69Zm42.24,0c-6.3,0-11.48-5.78-11.48-12.89S78.34,39.9,84.72,39.9s11.48,5.78,11.48,12.89S91.1,65.69,84.72,65.69Z"/>
-            </svg>
+            <svg class="discord-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 127.14 96.36"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.06,72.06,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.71,32.65-1.82,56.6.39,80.21a105.73,105.73,0,0,0,32.17,16.15,77.7,77.7,0,0,0,6.89-11.11,68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1,105.25,105.25,0,0,0,32.19-16.14c2.64-27.38-4.52-51.06-19.73-72.13ZM42.48,65.69c-6.3,0-11.48-5.78-11.48-12.89S36.1,39.9,42.48,39.9s11.48,5.78,11.48,12.89S48.86,65.69,42.48,65.69Zm42.24,0c-6.3,0-11.48-5.78-11.48-12.89S78.34,39.9,84.72,39.9s11.48,5.78,11.48,12.89S91.1,65.69,84.72,65.69Z"/></svg>
             Join Discord
         </a>
     </div>
 
     <div class="footer">DEVELOPED BY GTGT TEAM &copy; 2026</div>
+
+    <script>
+        // Smooth Particle Generator
+        const container = document.getElementById('particle-container');
+        const particleCount = 25;
+
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            
+            // Random sizes
+            const size = Math.random() * 5 + 2 + 'px';
+            particle.style.width = size;
+            particle.style.height = size;
+            
+            // Random positions
+            particle.style.left = Math.random() * 100 + 'vw';
+            
+            // Random speeds and delays for smoothness
+            particle.style.animationDuration = Math.random() * 10 + 5 + 's';
+            particle.style.animationDelay = Math.random() * 5 + 's';
+            
+            container.appendChild(particle);
+        }
+    </script>
 
 </body>
 </html>
