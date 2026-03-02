@@ -61,17 +61,27 @@
         .btn-tutorial { background: rgba(255, 215, 0, 0.05); border: 2px solid rgba(255, 215, 0, 0.4); color: #ffd700; }
         .btn:hover { transform: scale(1.03); filter: brightness(1.1); }
 
-        /* --- Tutorial View --- */
-        #tutorialView { display: none; }
-        .tab-bar { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; }
-        .tab {
-            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,215,0,0.2);
-            color: rgba(255,255,255,0.6); padding: 8px 12px; border-radius: 15px;
-            font-size: 0.75rem; cursor: pointer; transition: 0.3s; font-weight: 600; flex: 1;
+        /* --- Tutorial Overlay (Sleek Version) --- */
+        #tutorialOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            z-index: 200; display: none; flex-direction: column; align-items: center; justify-content: center;
+            opacity: 0; transition: opacity 0.4s ease;
         }
-        .tab.active { background: rgba(255,215,0,0.2); border-color: #ffd700; color: #ffd700; }
-        .tutorial-content { min-height: 100px; font-size: 0.9rem; line-height: 1.6; color: #eee; text-align: left; margin-bottom: 20px; }
-        .back-btn { font-size: 0.8rem; color: #ffd700; cursor: pointer; text-decoration: underline; margin-top: 10px; display: block; }
+        .modal { width: 90%; max-width: 550px; text-align: center; }
+        .close-btn { position: absolute; top: 30px; right: 40px; font-size: 2.5rem; color: #ffd700; cursor: pointer; }
+
+        .pill-group { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+        .pill { 
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,215,0,0.2);
+            padding: 8px 16px; border-radius: 50px; cursor: pointer; color: white; font-size: 0.8rem; transition: 0.3s;
+        }
+        .pill.active { background: #ffd700; color: black; border-color: #ffd700; font-weight: 600; }
+
+        .tutorial-box {
+            background: rgba(255, 255, 255, 0.05); padding: 30px; border-radius: 30px;
+            border: 1px solid rgba(255, 215, 0, 0.15); text-align: left; min-height: 200px;
+        }
 
         /* --- Particles --- */
         .particles { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
@@ -88,65 +98,107 @@
         <h1>GTGT</h1>
         <p class="subtitle">The Growtopia experience, evolved.</p>
         
-        <div id="mainView" class="btn-group">
+        <div class="btn-group">
             <a href="https://discord.gg/qkaVBCUrna" target="_blank" class="btn btn-discord">
                 <svg style="width:24px;height:24px;fill:white" viewBox="0 0 127.14 96.36"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.06,72.06,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.71,32.65-1.82,56.6.39,80.21a105.73,105.73,0,0,0,32.17,16.15,77.7,77.7,0,0,0,6.89-11.11,68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1,105.25,105.25,0,0,0,32.19-16.14c2.64-27.38-4.52-51.06-19.73-72.13ZM42.48,65.69c-6.3,0-11.48-5.78-11.48-12.89S36.1,39.9,42.48,39.9s11.48,5.78,11.48,12.89S48.86,65.69,42.48,65.69Zm42.24,0c-6.3,0-11.48-5.78-11.48-12.89S78.34,39.9,84.72,39.9s11.48,5.78,11.48,12.89S91.1,65.69,84.72,65.69Z"/></svg>
                 Join Discord
             </a>
-            <button onclick="showTutorial()" class="btn btn-tutorial">
+            <button onclick="toggleTutorial(true)" class="btn btn-tutorial">
                 <svg style="width:24px;height:24px;fill:currentColor" viewBox="0 0 24 24"><path d="M11,18H13V16H11V18M12,2A10,10,0,0,0,2,12A10,10,0,0,0,12,22A10,10,0,0,0,22,12A10,10,0,0,0,12,2M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,6A4,4,0,0,0,8,10H10A2,2,0,0,1,12,8A2,2,0,0,1,14,10C14,12 11,11.75 11,15H13C13,12.75 16,12.5 16,10A4,4,0,0,0,12,6Z"/></svg>
                 How To Join
             </button>
         </div>
-
-        <div id="tutorialView">
-            <div class="tab-bar">
-                <div class="tab active" onclick="switchDevice('pc', this)">WINDOWS</div>
-                <div class="tab" onclick="switchDevice('android', this)">ANDROID</div>
-                <div class="tab" onclick="switchDevice('ios', this)">iOS</div>
-            </div>
-            <div id="tutorialContent" class="tutorial-content"></div>
-            <a id="dlButton" href="#" target="_blank" class="btn btn-discord" style="background:#ffd700; color:black; font-weight:800;">GET HOSTS</a>
-            <span class="back-btn" onclick="showMain()">Go Back</span>
-        </div>
-
         <div class="footer">DEVELOPED BY GTGT TEAM &copy; 2026</div>
+    </div>
+
+    <div id="tutorialOverlay">
+        <span class="close-btn" onclick="toggleTutorial(false)">&times;</span>
+        <div class="modal">
+            <h2 style="font-family:'Fredoka One'; color:#ffd700; font-size: 2.5rem; margin-bottom: 20px;">Setup Guide</h2>
+            
+            <div class="pill-group">
+                <div class="pill lang active" onclick="setLang('en', this)">🇺🇸 EN</div>
+                <div class="pill lang" onclick="setLang('id', this)">🇮🇩 ID</div>
+                <div class="pill lang" onclick="setLang('lt', this)">🇱🇹 LT</div>
+                <div class="pill lang" onclick="setLang('ru', this)">🇷🇺 RU</div>
+            </div>
+
+            <div class="pill-group">
+                <div class="pill dev active" onclick="setDev('pc', this)">WINDOWS</div>
+                <div class="pill dev" onclick="setDev('android', this)">ANDROID</div>
+                <div class="pill dev" onclick="setDev('ios', this)">iOS</div>
+            </div>
+
+            <div class="tutorial-box">
+                <div id="tutorialText" style="line-height: 1.8; color: #eee;"></div>
+                <a id="actionLink" href="#" target="_blank" class="btn btn-discord" style="background:#ffd700; color:black; font-weight:800; margin-top:20px; font-size: 0.9rem;">GET CONFIG</a>
+            </div>
+        </div>
     </div>
 
     <script>
         const discordID = '1388213237023244449';
-        
-        const data = {
-            pc: {
-                text: "1. Open <b>Win+R</b> and type <code>C:\\Windows\\System32\\drivers\\etc</code><br>2. Edit <b>hosts</b> with Notepad.<br>3. Paste IPs at the bottom and Save.",
-                link: "https://bit.ly/GTGTps"
+        let currentLang = 'en', currentDev = 'pc';
+
+        const tutorials = {
+            en: {
+                pc: "1. Press <b>Win+R</b> and type <code>C:\\Windows\\System32\\drivers\\etc</code><br>2. Edit <b>hosts</b> with Notepad.<br>3. Paste IPs at the bottom and Save (Ctrl+S).",
+                android: "1. Download <b>PowerTunnel</b>.<br>2. Enable Hosts Plugin.<br>3. Click the button below to get the URL for the app.",
+                ios: "1. Download <b>Surge 5</b>.<br>2. Create Profile -> Edit in Text Mode.<br>3. Paste the configuration from the button below."
             },
-            android: {
-                text: "1. Download <b>PowerTunnel</b>.<br>2. Enable Hosts Plugin.<br>3. Paste the URL from the button below.",
-                link: "https://dash.gtps.cloud/android/50"
+            id: {
+                pc: "1. Tekan <b>Win+R</b>, ketik path hosts.<br>2. Edit dengan Notepad.<br>3. Tempel IP kami dan Simpan.",
+                android: "1. Unduh PowerTunnel.<br>2. Aktifkan Plugin Hosts.<br>3. Klik tombol di bawah untuk mendapatkan URL.",
+                ios: "1. Unduh Surge 5.<br>2. Buat profil -> Edit Mode Teks.<br>3. Tempel konfigurasi dari tombol di bawah."
             },
-            ios: {
-                text: "1. Download <b>Surge 5</b>.<br>2. New Profile -> Edit in Text Mode.<br>3. Paste config from button below.",
-                link: "https://dash.gtps.cloud/ios/50"
+            lt: {
+                pc: "1. Spauskite <b>Win+R</b>, įrašykite kelią.<br>2. Redaguokite per Notepad.<br>3. Įklijuokite IP ir išsaugokite.",
+                android: "1. Atsisiųskite PowerTunnel.<br>2. Įjunkite Hosts įskiepį.<br>3. Gaukite nuorodą paspaudę žemiau.",
+                ios: "1. Atsisiųskite Surge 5.<br>2. Naujas profilis -> Teksto režimas.<br>3. Įklijuokite nustatymus iš mygtuko žemiau."
+            },
+            ru: {
+                pc: "1. Нажмите <b>Win+R</b>, введите путь.<br>2. Откройте через Блокнот.<br>3. Вставьте IP и сохраните.",
+                android: "1. Скачайте PowerTunnel.<br>2. Включите плагин Hosts.<br>3. Нажмите кнопку ниже для получения ссылки.",
+                ios: "1. Установите Surge 5.<br>2. Новый профиль -> Текстовый режим.<br>3. Вставьте конфиг по кнопке ниже."
             }
         };
 
-        function showTutorial() {
-            document.getElementById('mainView').style.display = 'none';
-            document.getElementById('tutorialView').style.display = 'block';
-            switchDevice('pc', document.querySelector('.tab'));
+        const links = {
+            pc: "https://bit.ly/GTGTps",
+            android: "https://dash.gtps.cloud/android/50",
+            ios: "https://dash.gtps.cloud/ios/50"
+        };
+
+        function updateTutorial() {
+            document.getElementById('tutorialText').innerHTML = tutorials[currentLang][currentDev];
+            document.getElementById('actionLink').href = links[currentDev];
+            document.getElementById('actionLink').innerText = `GET ${currentDev.toUpperCase()} CONFIG`;
         }
 
-        function showMain() {
-            document.getElementById('mainView').style.display = 'flex';
-            document.getElementById('tutorialView').style.display = 'none';
+        function setLang(l, e) {
+            currentLang = l;
+            document.querySelectorAll('.pill.lang').forEach(p=>p.classList.remove('active'));
+            e.classList.add('active');
+            updateTutorial();
         }
 
-        function switchDevice(dev, el) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            el.classList.add('active');
-            document.getElementById('tutorialContent').innerHTML = data[dev].text;
-            document.getElementById('dlButton').href = data[dev].link;
+        function setDev(d, e) {
+            currentDev = d;
+            document.querySelectorAll('.pill.dev').forEach(p=>p.classList.remove('active'));
+            e.classList.add('active');
+            updateTutorial();
+        }
+
+        function toggleTutorial(show) {
+            const o = document.getElementById('tutorialOverlay');
+            if(show) {
+                o.style.display = 'flex';
+                setTimeout(() => o.style.opacity = '1', 10);
+                updateTutorial();
+            } else {
+                o.style.opacity = '0';
+                setTimeout(() => o.style.display = 'none', 400);
+            }
         }
 
         async function updatePlayerCount() {
