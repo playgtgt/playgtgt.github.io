@@ -30,19 +30,31 @@
             0%, 100% { border-color: rgba(255, 215, 0, 0.2); box-shadow: 0 0 20px rgba(255, 215, 0, 0.1); }
             50% { border-color: rgba(255, 215, 0, 0.8); box-shadow: 0 0 40px rgba(255, 215, 0, 0.3); }
         }
+        @keyframes drift {
+            from { transform: translateY(0) rotate(0deg); opacity: 0; }
+            15% { opacity: 0.5; }
+            100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+        }
         @keyframes shine { 0% { left: -100%; } 100% { left: 100%; } }
 
-        /* --- THE UNIFIED GLASS STYLE --- */
+        /* --- UI Elements --- */
+        .particles { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+        .particle { position: absolute; bottom: -20px; background: rgba(255, 215, 0, 0.4); border-radius: 50%; animation: drift linear infinite; }
+
+        .main-container { display: flex; flex-direction: column; align-items: center; gap: 20px; z-index: 10; animation: float 6s ease-in-out infinite; }
+        
+        /* THE GLASS STYLE - Applied to ALL Boards equally */
         .glass-board {
-            background: var(--glass-bg) !important;
-            backdrop-filter: var(--glass-blur) !important;
+            background: var(--glass-bg) !important; 
+            border: 2px solid rgba(255, 215, 0, 0.3); 
+            border-radius: 50px; 
+            backdrop-filter: var(--glass-blur) !important; 
             -webkit-backdrop-filter: var(--glass-blur) !important;
-            border: 2px solid rgba(255, 215, 0, 0.3);
-            border-radius: 50px;
             animation: boardPulse 4s ease-in-out infinite;
+            position: relative;
         }
 
-        .box { padding: 40px 60px; text-align: center; width: 480px; z-index: 10; animation: float 6s ease-in-out infinite; }
+        .box { padding: 40px 60px; text-align: center; width: 480px; }
 
         h1 { 
             font-family: 'Fredoka One', cursive; font-size: 6.5rem; margin: 0; 
@@ -54,42 +66,73 @@
         /* --- Buttons --- */
         .btn-group { display: flex; flex-direction: column; gap: 12px; margin-top: 25px; }
         .btn { padding: 18px; text-decoration: none; border-radius: 50px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 12px; transition: 0.3s; cursor: pointer; border: none; font-size: 1rem; }
-        .btn svg { width: 22px; height: 22px; fill: currentColor; display: block; }
+        .btn svg { width: 22px; height: 22px; fill: currentColor; }
         .btn-discord { background: #5865F2; color: white; }
         .btn-market { background: linear-gradient(45deg, #ffd700, #ff9900); color: #000; overflow: hidden; position: relative; }
         .btn-tutorial { background: rgba(255,255,255,0.05); color: #ffd700; border: 1px solid rgba(255,215,0,0.3); }
+        .btn:hover { transform: scale(1.03); filter: brightness(1.1); }
 
         /* --- Overlays --- */
         .overlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.2); /* Very light dim to keep glass visible */
+            background: rgba(0,0,0,0.4); /* Darkens bg slightly but lets the glass effect pop */
             z-index: 1000; display: none; align-items: center; justify-content: center; opacity: 0; transition: 0.4s; 
         }
-        .close-x { position: absolute; top: 30px; right: 40px; font-size: 3.5rem; cursor: pointer; color: #ffd700; z-index: 1100; }
+        .close-x { position: absolute; top: 30px; right: 40px; font-size: 3.5rem; cursor: pointer; color: #ffd700; z-index: 1100; transition: 0.3s; }
+        .close-x:hover { transform: rotate(90deg) scale(1.2); }
 
-        /* --- Icons Fix --- */
-        .pill svg { 
-            width: 18px; height: 18px; 
-            fill: white; /* Default white */
-            display: inline-block;
-            vertical-align: middle;
+        /* --- Market Shop Buttons --- */
+        .shop-btn { 
+            background: rgba(255,255,255,0.08); border: 1px solid rgba(255,215,0,0.2); color: white; 
+            padding: 20px; border-radius: 25px; display: flex; justify-content: space-between; 
+            align-items: center; text-decoration: none; margin-bottom: 12px; transition: 0.3s;
+            position: relative; overflow: hidden;
         }
-        .pill.active svg { fill: black; } /* Black icon when button is gold */
+        .shop-btn::after {
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,215,0,0.3), transparent);
+            transform: skewX(-25deg); animation: shine 3s infinite;
+        }
+        .shop-btn:hover { border-color: #ffd700; transform: translateX(10px); background: rgba(255,215,0,0.15); }
+        .discount-badge { background: #ff4444; color: white; padding: 2px 8px; border-radius: 5px; font-size: 0.75rem; margin-right: 10px; font-weight: 800; }
+        .old-price { text-decoration: line-through; opacity: 0.5; font-size: 0.8rem; margin-right: 5px; }
 
-        .pill-group { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; }
-        .pill { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,215,0,0.2); padding: 10px 20px; border-radius: 50px; cursor: pointer; font-size: 0.8rem; display: flex; align-items: center; gap: 8px; color: white; }
+        /* --- Screenshot Stack --- */
+        .screenshot-stack { position: fixed; bottom: 25px; left: 25px; display: flex; flex-direction: column-reverse; gap: 12px; z-index: 50; }
+        .ss-thumb { width: 150px; height: 85px; border-radius: 12px; border: 2px solid rgba(255,215,0,0.3); cursor: pointer; transition: 0.4s; object-fit: cover; }
+        .ss-thumb:hover { transform: scale(1.1) translateX(15px); border-color: #ffd700; }
+
+        /* --- FAQ Trigger --- */
+        .faq-trigger { position: fixed; bottom: 30px; right: 30px; background: rgba(0,0,0,0.5); padding: 12px 30px; border-radius: 50px; font-weight: 700; cursor: pointer; color: #ffd700; border: 1px solid rgba(255,215,0,0.3); z-index: 50; transition: 0.3s; }
+        .faq-trigger:hover { background: #ffd700; color: #000; }
+
+        /* --- Tutorial Elements (With Icon Fixes) --- */
+        .pill-group { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+        .pill { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,215,0,0.2); padding: 8px 18px; border-radius: 50px; cursor: pointer; font-size: 0.8rem; display: flex; align-items: center; gap: 8px; color: white; transition: 0.3s; }
         .pill.active { background: #ffd700; color: #000; font-weight: 800; border-color: #ffd700; }
+        
+        .pill svg { width: 18px; height: 18px; fill: white; display: inline-block; vertical-align: middle; transition: 0.3s; }
+        .pill.active svg { fill: black; }
 
-        #hostsBox { background: rgba(0,0,0,0.4); padding: 15px; border-radius: 15px; font-family: monospace; font-size: 0.75rem; color: #ffd700; margin-top: 15px; border-left: 3px solid #ffd700; display: none; }
+        #hostsBox { background: rgba(0,0,0,0.4); padding: 15px; border-radius: 15px; font-family: monospace; font-size: 0.75rem; color: #ffd700; margin-top: 15px; border-left: 3px solid #ffd700; display: none; text-align: left; }
 
+        /* Why Play Section */
         .why-play { width: 560px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px; z-index: 10; }
         .why-card { background: rgba(0,0,0,0.4); padding: 15px; border-radius: 20px; border: 1px solid rgba(255,215,0,0.15); font-size: 0.8rem; backdrop-filter: blur(10px); }
-        .why-card b { color: #ffd700; display: block; }
-
-        .shop-btn { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,215,0,0.2); color: white; padding: 20px; border-radius: 25px; display: flex; justify-content: space-between; align-items: center; text-decoration: none; margin-bottom: 12px; position: relative; overflow: hidden; }
+        .why-card b { color: #ffd700; display: block; margin-bottom: 3px; }
     </style>
 </head>
 <body>
+
+    <div class="particles" id="particle-container"></div>
+
+    <div class="screenshot-stack">
+        <img src="world3.png" class="ss-thumb" onclick="vImg(this.src)">
+        <img src="world2.png" class="ss-thumb" onclick="vImg(this.src)">
+        <img src="world1.png" class="ss-thumb" onclick="vImg(this.src)">
+    </div>
+
+    <div class="faq-trigger" onclick="toggleOverlay('faqOverlay', true)">FAQ</div>
 
     <div class="main-container">
         <div class="glass-board box">
@@ -106,29 +149,49 @@
                     <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
                     HOW TO JOIN
                 </button>
+                <a href="https://discord.gg/qkaVBCUrna" target="_blank" class="btn btn-discord">
+                    <svg viewBox="0 0 127.14 96.36"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.06,72.06,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.71,32.65-1.82,56.6.39,80.21a105.73,105.73,0,0,0,32.17,16.15,77.7,77.7,0,0,0,6.89-11.11,68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1,105.25,105.25,0,0,0,32.19-16.14c2.64-27.38-4.52-51.06-19.73-72.13ZM42.48,65.69c-6.3,0-11.48-5.78-11.48-12.89S36.1,39.9,42.48,39.9s11.48,5.78,11.48,12.89S48.86,65.69,42.48,65.69Zm42.24,0c-6.3,0-11.48-5.78-11.48-12.89S78.34,39.9,84.72,39.9s11.48,5.78,11.48,12.89S91.1,65.69,84.72,65.69Z"/></svg>
+                    DISCORD SERVER
+                </a>
             </div>
         </div>
 
         <div class="why-play">
             <div class="why-card"><b>STABLE ECONOMY</b> Fair values and zero inflation.</div>
             <div class="why-card"><b>ACTIVE STAFF</b> Support available 24/7 on Discord.</div>
+            <div class="why-card"><b>FAST DELIVERY</b> Purchases delivered manually within minutes.</div>
+            <div class="why-card"><b>ZERO LAG</b> High-end hosting for a smooth experience.</div>
         </div>
     </div>
 
     <div id="marketOverlay" class="overlay">
         <span class="close-x" onclick="toggleOverlay('marketOverlay', false)">&times;</span>
         <div class="glass-board" style="padding:45px; width:480px; text-align:center;">
-            <h2 style="font-family:'Fredoka One'; color:#ffd700; font-size:2.2rem;">PREMIUM MARKET</h2>
-            <a href="#" class="shop-btn"><span>10x PWLs</span> <b style="color:#ffd700;">€10.00</b></a>
-            <a href="#" class="shop-btn"><span>50x PWLs</span> <b style="color:#ffd700;">€34.99</b></a>
+            <h2 style="font-family:'Fredoka One'; color:#ffd700; font-size:2.2rem; margin-bottom:30px;">PREMIUM MARKET</h2>
+            <a href="https://ko-fi.com/c/78a8fe7648" target="_blank" class="shop-btn">
+                <span>10x World Locks</span> <b style="color:#ffd700;">€10.00</b>
+            </a>
+            <a href="https://ko-fi.com/c/4e2ec675f5" target="_blank" class="shop-btn">
+                <span>50x World Locks</span> 
+                <span><span class="discount-badge">SAVE 30%</span><span class="old-price">€50.00</span><b style="color:#ffd700;">€34.99</b></span>
+            </a>
+            <a href="https://ko-fi.com/c/7110f4d762" target="_blank" class="shop-btn">
+                <span>100x World Locks</span>
+                <span><span class="discount-badge">SAVE 50%</span><span class="old-price">€100.00</span><b style="color:#ffd700;">€49.99</b></span>
+            </a>
         </div>
     </div>
 
     <div id="howOverlay" class="overlay">
         <span class="close-x" onclick="toggleOverlay('howOverlay', false)">&times;</span>
         <div class="glass-board" style="padding:45px; width:540px; text-align:center;">
-            <h2 style="font-family:'Fredoka One'; color:#ffd700; margin-bottom:20px;">SETUP GUIDE</h2>
-            
+            <h2 style="font-family:'Fredoka One'; color:#ffd700; font-size:2rem; margin-bottom:20px;">SETUP GUIDE</h2>
+            <div class="pill-group">
+                <div class="pill lang active" onclick="setL('en',this)">🇺🇸 EN</div>
+                <div class="pill lang" onclick="setL('id',this)">🇮🇩 ID</div>
+                <div class="pill lang" onclick="setL('lt',this)">🇱🇹 LT</div>
+                <div class="pill lang" onclick="setL('ru',this)">🇷🇺 RU</div>
+            </div>
             <div class="pill-group">
                 <div class="pill dev active" onclick="setD('pc',this)">
                     <svg viewBox="0 0 24 24"><path d="M0 3.449L9.75 2.1V11.7H0V3.449zm0 9.15h9.75V21.9L0 20.551V12.599zm10.65-10.8L24 0v11.7H10.65V1.799zM10.65 12.6V24l13.35-1.8V12.6H10.65z"/></svg> WINDOWS
@@ -140,17 +203,53 @@
                     <svg viewBox="0 0 24 24"><path d="M18.7 19.5c-.8 1.2-1.7 2.4-3.1 2.5-1.3 0-1.8-.8-3.3-.8s-2 .8-3.3.8-2.3-1.3-3.1-2.5c-1.7-2.5-3-7-1.3-10.1.9-1.5 2.4-2.5 4.1-2.5 1.3 0 2.5.9 3.3.9.8 0 2.3-1.1 3.8-.9.7 0 2.5.3 3.6 2-.1.1-2.2 1.3-2.2 3.8.1 3 2.7 4 2.7 4.1-.1.1-.5 1.5-1.4 2.9zm-5.7-16c.7-.8 1.9-1.5 2.9-1.5.1 1.2-.3 2.4-1 3.2-.7.8-1.8 1.5-3 1.4-.1-1.1.4-2.3 1.1-3.1z"/></svg> APPLE
                 </div>
             </div>
-
             <div id="tText" style="text-align:left; font-size:0.95rem; line-height:1.7; min-height:80px;"></div>
-            <div id="hostsBox">91.134.85.13 growtopia1.com<br>91.134.85.13 growtopia2.com</div>
+            <div id="hostsBox">91.134.85.13 growtopia1.com<br>91.134.85.13 growtopia2.com<br>91.134.85.13 www.growtopia1.com<br>91.134.85.13 www.growtopia2.com</div>
             <button id="actionBtn" class="btn" style="background:#ffd700; color:#000; width:100%; margin-top:20px; font-weight:800;"></button>
         </div>
     </div>
 
+    <div id="faqOverlay" class="overlay">
+        <span class="close-x" onclick="toggleOverlay('faqOverlay', false)">&times;</span>
+        <div class="glass-board" style="padding:45px; width:480px; text-align:left;">
+            <h2 style="font-family:'Fredoka One'; color:#ffd700; text-align:center; margin-bottom:20px;">FREQUENT QUESTIONS</h2>
+            <p><b>Is GTGT safe?</b><br>Yes. We use industry-standard encryption and never store user passwords.</p>
+            <p><b>When do I get my locks?</b><br>Orders are processed manually by staff. Usually within 5-15 minutes.</p>
+            <p><b>How many players?</b><br>We have a growing community with events every weekend!</p>
+        </div>
+    </div>
+
+    <div id="imgViewer" onclick="this.style.display='none'" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:2000; display:none; align-items:center; justify-content:center;"><img id="fullImg" style="max-width:90%; max-height:90%; border:3px solid #ffd700; border-radius:15px; box-shadow:0 0 50px rgba(255,215,0,0.3);"></div>
+
     <script>
+        // Particles
+        const container = document.getElementById('particle-container');
+        for (let i = 0; i < 30; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            p.style.width = p.style.height = Math.random() * 5 + 2 + 'px';
+            p.style.left = Math.random() * 100 + 'vw';
+            p.style.animationDuration = Math.random() * 10 + 6 + 's';
+            p.style.animationDelay = Math.random() * 8 + 's';
+            container.appendChild(p);
+        }
+
         let cL = 'en', cD = 'pc';
-        const tuts = { en: "1. Press <b>Win+R</b> and type <code>drivers\\etc</code><br>2. Edit <b>hosts</b> with Notepad.<br>3. Paste the IPs below." };
-        const mobileTuts = { en: { android: "1. Download PowerTunnel.<br>2. Enable Hosts Plugin.", ios: "1. Download Surge 5.<br>2. Edit in Text Mode." } };
+        const tutPath = "<code>C:\\Windows\\System32\\drivers\\etc</code>";
+        
+        const tuts = {
+            en: `1. Press <b>Win+R</b> and type ${tutPath}<br>2. Edit <b>hosts</b> with Notepad.<br>3. Paste the IPs below and Save.`,
+            id: `1. Tekan <b>Win+R</b> dan ketik ${tutPath}<br>2. Edit <b>hosts</b> dengan Notepad.<br>3. Tempel IP di bawah ini dan Simpan.`,
+            lt: `1. Spauskite <b>Win+R</b> ir įrašykite ${tutPath}<br>2. Atidarykite <b>hosts</b> su Notepad.<br>3. Įklijuokite IP apačioje.`,
+            ru: `1. Нажмите <b>Win+R</b> и введите ${tutPath}<br>2. Откройте <b>hosts</b> через Блокнот.<br>3. Вставьте IP строки в конец.`
+        };
+
+        const mobileTuts = {
+            en: { android: "1. Download PowerTunnel.<br>2. Enable Hosts Plugin.<br>3. Click the button below to get link.", ios: "1. Download Surge 5.<br>2. New Profile -> Edit in Text Mode.<br>3. Paste the host configuration." },
+            id: { android: "1. Unduh PowerTunnel.<br>2. Aktifkan Plugin Hosts.<br>3. Klik tombol di bawah ini.", ios: "1. Unduh Surge 5.<br>2. Mode Teks.<br>3. Tempel konfigurasi dari link." },
+            lt: { android: "1. Atsisiųskite PowerTunnel.<br>2. Įjunkite Hosts įskiepį.<br>3. Gaukite Hosts nuorodą žemiau.", ios: "1. Atsisiųskite Surge 5.<br>2. Naujas profilis -> Teksto režimas." },
+            ru: { android: "1. Скачайте PowerTunnel.<br>2. Включите плагин Hosts.<br>3. Нажмите кнопку ниже.", ios: "1. Установите Surge 5.<br>2. Новый профиль -> Редактировать." }
+        };
 
         function toggleOverlay(id, s) { 
             const o = document.getElementById(id); 
@@ -165,14 +264,18 @@
                 document.getElementById('tText').innerHTML = tuts[cL];
                 h.style.display = 'block';
                 b.innerText = "COPY IPs";
+                b.onclick = () => { navigator.clipboard.writeText("91.134.85.13 growtopia1.com\n91.134.85.13 growtopia2.com\n91.134.85.13 www.growtopia1.com\n91.134.85.13 www.growtopia2.com"); b.innerText = "COPIED!"; setTimeout(()=>b.innerText="COPY IPs", 2000); };
             } else {
                 document.getElementById('tText').innerHTML = mobileTuts[cL][cD];
                 h.style.display = 'none';
                 b.innerText = "GET HOSTS";
+                b.onclick = () => window.open(cD === 'android' ? "https://dash.gtps.cloud/android/50" : "https://dash.gtps.cloud/ios/50");
             }
         }
 
+        function setL(l,e) { cL=l; document.querySelectorAll('.pill.lang').forEach(p=>p.classList.remove('active')); e.classList.add('active'); updateT(); }
         function setD(d,e) { cD=d; document.querySelectorAll('.pill.dev').forEach(p=>p.classList.remove('active')); e.classList.add('active'); updateT(); }
+        function vImg(s) { document.getElementById('fullImg').src = s; document.getElementById('imgViewer').style.display = 'flex'; }
 
         async function getCount() {
             try {
@@ -181,7 +284,7 @@
                 document.getElementById('pCount').innerText = `ONLINE PLAYERS: ${d.presence_count || 0}`;
             } catch(e) { document.getElementById('pCount').innerText = "SERVER STATUS: ONLINE"; }
         }
-        getCount();
+        getCount(); setInterval(getCount, 30000);
     </script>
 </body>
 </html>
