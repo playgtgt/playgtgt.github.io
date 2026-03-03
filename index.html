@@ -38,7 +38,6 @@
         }
         @keyframes shine { 0% { left: -100%; } 100% { left: 100%; } }
         
-        /* New Bouncy Toast Animation */
         @keyframes toastIn {
             0% { transform: translate(-50%, -100px) scale(0.8); opacity: 0; }
             60% { transform: translate(-50%, 25px) scale(1.05); opacity: 1; }
@@ -49,8 +48,20 @@
         .particles { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
         .particle { position: absolute; bottom: -20px; background: rgba(255, 215, 0, 0.4); border-radius: 50%; animation: drift linear infinite; }
 
-        .main-container { display: flex; flex-direction: column; align-items: center; gap: 20px; z-index: 10; animation: float 6s ease-in-out infinite; }
+        /* Added transition for the background blur effect */
+        .main-container { 
+            display: flex; flex-direction: column; align-items: center; gap: 20px; z-index: 10; 
+            animation: float 6s ease-in-out infinite; 
+            transition: filter 0.5s ease, transform 0.5s ease;
+        }
         
+        /* State class for blurred background */
+        .content-blur {
+            filter: blur(10px) brightness(0.7);
+            transform: scale(0.95);
+            pointer-events: none;
+        }
+
         .glass-board {
             background: var(--glass-bg) !important; 
             border: 2px solid rgba(255, 215, 0, 0.3); 
@@ -90,7 +101,6 @@
         .btn-tutorial { background: rgba(255,255,255,0.05); color: #ffd700; border: 1px solid rgba(255,215,0,0.3); }
         .btn:hover { transform: scale(1.03); filter: brightness(1.1); }
         
-        /* New: Button Click Glow Effect */
         .btn-click-fx {
             transform: scale(0.95) !important;
             box-shadow: 0 0 30px var(--gold), inset 0 0 20px rgba(255, 215, 0, 0.5) !important;
@@ -124,12 +134,12 @@
         .discount-badge { background: #ff4444; color: white; padding: 2px 8px; border-radius: 5px; font-size: 0.75rem; margin-right: 10px; font-weight: 800; }
         .old-price { text-decoration: line-through; opacity: 0.5; font-size: 0.8rem; margin-right: 5px; }
 
-        /* --- Screenshot Stack (Glowing Borders Added) --- */
-        .screenshot-stack { position: fixed; bottom: 25px; left: 25px; display: flex; flex-direction: column-reverse; gap: 12px; z-index: 50; }
+        /* --- Screenshot Stack --- */
+        .screenshot-stack { position: fixed; bottom: 25px; left: 25px; display: flex; flex-direction: column-reverse; gap: 12px; z-index: 50; transition: filter 0.5s ease; }
         .ss-thumb { 
             width: 150px; height: 85px; border-radius: 12px; 
-            border: 2px solid var(--gold); /* Golden Border */
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.4); /* Glowing */
+            border: 2px solid var(--gold);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.4); 
             cursor: pointer; transition: 0.4s; object-fit: cover; 
         }
         .ss-thumb:hover { transform: scale(1.1) translateX(15px); box-shadow: 0 0 25px rgba(255, 215, 0, 0.8); }
@@ -177,7 +187,7 @@
 
     <div class="particles" id="particle-container"></div>
 
-    <div class="screenshot-stack">
+    <div class="screenshot-stack" id="ssStack">
         <img src="world3.png" class="ss-thumb" onclick="vImg(this.src)">
         <img src="world2.png" class="ss-thumb" onclick="vImg(this.src)">
         <img src="world1.png" class="ss-thumb" onclick="vImg(this.src)">
@@ -185,7 +195,7 @@
 
     <div class="faq-trigger" onclick="toggleOverlay('faqOverlay', true)">FAQ</div>
 
-    <div class="main-container">
+    <div class="main-container" id="mainContent">
         <div class="glass-board box">
             <div id="pCount" style="font-family:'Fredoka One'; color:#ffd700; font-size:0.8rem; letter-spacing:2px;">ONLINE PLAYERS: FETCHING...</div>
             <h1>GTGT</h1>
@@ -273,23 +283,19 @@
     <div id="imgViewer" onclick="this.style.display='none'" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:2000; display:none; align-items:center; justify-content:center;"><img id="fullImg" style="max-width:90%; max-height:90%; border:3px solid #ffd700; border-radius:15px; box-shadow:0 0 50px rgba(255,215,0,0.3);"></div>
 
     <script>
-        // --- NEW CLICKY SOUND (Satisfying Keyboard Pop) ---
+        // --- SATISFYING CLICK SOUND ---
         let audioCtx;
         function playClickSound() {
             try {
                 if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 if (audioCtx.state === 'suspended') audioCtx.resume();
-                
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
-                
-                osc.type = 'triangle'; // Gives a sharp, mechanical click sound
+                osc.type = 'triangle';
                 osc.frequency.setValueAtTime(600, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.015); // Extremely fast drop = pop
-                
+                osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.015);
                 gain.gain.setValueAtTime(0.15, audioCtx.currentTime); 
                 gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.015);
-                
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
                 osc.start();
@@ -297,14 +303,13 @@
             } catch(e) { }
         }
 
-        // Attach sound to clickable elements
         document.addEventListener('click', function(e) {
             if (e.target.closest('.btn, .pill, .close-x, .ss-thumb, .faq-trigger, .shop-btn')) {
                 playClickSound();
             }
         });
 
-        // --- ENHANCED TOAST NOTIFICATION ---
+        // --- TOAST ---
         function showToast() {
             const t = document.getElementById('toast');
             t.style.display = 'flex';
@@ -344,10 +349,25 @@
             ru: { android: "1. Скачайте PowerTunnel.<br>2. Включите плагин Hosts.<br>3. Нажмите кнопку ниже.", ios: "1. Установите Surge 5.<br>2. Новый профиль -> Редактировать." }
         };
 
+        // --- UPDATED TOGGLE OVERLAY (Handles Blurring) ---
         function toggleOverlay(id, s) { 
             const o = document.getElementById(id); 
-            if(s){ o.style.display='flex'; setTimeout(()=>o.style.opacity='1',10); updateT(); } 
-            else { o.style.opacity='0'; setTimeout(()=>o.style.display='none',400); }
+            const main = document.getElementById('mainContent');
+            const stack = document.getElementById('ssStack');
+
+            if(s){ 
+                o.style.display='flex'; 
+                setTimeout(()=>o.style.opacity='1',10); 
+                main.classList.add('content-blur'); // Add blur to background
+                stack.style.filter = 'blur(10px)';  // Blur screenshots
+                updateT(); 
+            } 
+            else { 
+                o.style.opacity='0'; 
+                main.classList.remove('content-blur'); // Remove blur
+                stack.style.filter = 'none';           // Unblur screenshots
+                setTimeout(()=>o.style.display='none',400); 
+            }
         }
 
         function updateT() {
@@ -357,13 +377,9 @@
                 document.getElementById('tText').innerHTML = tuts[cL];
                 h.style.display = 'block';
                 b.innerHTML = "COPY IPs";
-                
-                // Copy Action with Button Glow
                 b.onclick = function() { 
                     navigator.clipboard.writeText("91.134.85.13 growtopia1.com\n91.134.85.13 growtopia2.com\n91.134.85.13 www.growtopia1.com\n91.134.85.13 www.growtopia2.com"); 
                     showToast(); 
-                    
-                    // Trigger Button Glow Animation
                     this.classList.add('btn-click-fx');
                     setTimeout(() => { this.classList.remove('btn-click-fx'); }, 200);
                 };
