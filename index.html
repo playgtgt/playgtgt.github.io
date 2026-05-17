@@ -3,8 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MVKET - KET Testai</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+    <title>MVKET - B Kategorija KET Testai</title>
+    
+    <!-- Svetainės ikonėlė (Favicon) -->
+    <link rel="icon" type="image/png" href="MVKET.png">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;700;800&display=swap">
     <style>
         :root {
             --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
@@ -170,7 +174,6 @@
         }
         @media (max-width: 950px) { .quiz-card { grid-template-columns: 1fr; gap: 30px; } }
 
-        /* REALISTIŠKAS VIZUALIZACIJOS RĖMAS */
         .visual-side { 
             background-color: #1e293b; 
             border-radius: 20px; 
@@ -257,7 +260,7 @@
         <div id="start-screen" class="screen-card">
             <h2>Oficialus KET Teorijos Egzaminas</h2>
             <p>Testą sudaro 30 laiko limitą turinčių užduočių.</p>
-            <button class="btn btn-primary" style="font-size: 18px; padding: 18px 46px;" onclick="startQuiz()">Pradėti egzaminą</button>
+            <button class="btn btn-primary" style="font-size: 18px; padding: 18px 46px;" onclick="startQuiz()">Pradėti realistišką egzaminą</button>
         </div>
 
         <div id="quiz-screen" class="hidden">
@@ -293,7 +296,6 @@
     </main>
 
     <script>
-        // --- CURSOR ---
         const cursor = document.getElementById('cursor');
         document.addEventListener('mousemove', (e) => {
             cursor.style.left = e.clientX + 'px';
@@ -309,46 +311,36 @@
 
         function toggleTheme() { document.body.classList.toggle('dark-theme'); }
 
-        // --- MAKSIMALIAI REALISTIŠKOS SANKRYŽŲ IR ŽENKLŲ SVG SCHEMOS ---
         const advancedIntersections = {
             lygiareiksme: `
             <svg viewBox="0 0 400 400" width="100%">
-                <!-- Aplinka / Žolė -->
                 <rect x="0" y="0" width="400" height="400" fill="#22c55e" fill-opacity="0.25"/>
-                <!-- Pilkas Šaligatvio bortelis -->
                 <rect x="125" y="0" width="150" height="400" fill="#94a3b8"/>
                 <rect x="0" y="125" width="400" height="150" fill="#94a3b8"/>
-                <!-- Tikroviškas asfaltas (Slate-700) -->
                 <rect x="130" y="0" width="140" height="400" fill="#334155"/>
                 <rect x="0" y="130" width="400" height="140" fill="#334155"/>
-                <!-- Sankryžos centras be persidengimų -->
                 <rect x="130" y="130" width="140" height="140" fill="#334155"/>
-                <!-- Ženklinimas: Ištisinės šoninės linijos -->
                 <line x1="130" y1="0" x2="130" y2="130" stroke="#ffffff" stroke-width="2"/>
                 <line x1="270" y1="0" x2="270" y2="130" stroke="#ffffff" stroke-width="2"/>
                 <line x1="130" y1="270" x2="130" y2="400" stroke="#ffffff" stroke-width="2"/>
                 <line x1="270" y1="270" x2="270" y2="400" stroke="#ffffff" stroke-width="2"/>
-                <!-- Ženklinimas: Brūkšninė ašinė linija (KET 1.5) -->
                 <line x1="200" y1="0" x2="200" y2="110" stroke="#ffffff" stroke-width="3" stroke-dasharray="10,10"/>
                 <line x1="200" y1="290" x2="200" y2="400" stroke="#ffffff" stroke-width="3" stroke-dasharray="10,10"/>
                 <line x1="0" y1="200" x2="110" y2="200" stroke="#ffffff" stroke-width="3" stroke-dasharray="10,10"/>
                 <line x1="290" y1="200" x2="400" y2="200" stroke="#ffffff" stroke-width="3" stroke-dasharray="10,10"/>
-                <!-- Pėsčiųjų Perėja ("Zebra") viršuje ir apačioje -->
                 <g fill="#ffffff" opacity="0.9">
                     <rect x="135" y="105" width="10" height="20"/><rect x="150" y="105" width="10" height="20"/><rect x="165" y="105" width="10" height="20"/>
                     <rect x="180" y="105" width="10" height="20"/><rect x="195" y="105" width="10" height="20"/><rect x="210" y="105" width="10" height="20"/>
                     <rect x="225" y="105" width="10" height="20"/><rect x="240" y="105" width="10" height="20"/><rect x="255" y="105" width="10" height="20"/>
                 </g>
-                <!-- Automobilis 1 (Raudonas, modernus dizainas iš viršaus) -->
                 <g transform="translate(215, 310)">
                     <rect x="0" y="0" width="36" height="60" rx="6" fill="#dc2626" stroke="#991b1b" stroke-width="2"/>
-                    <rect x="4" y="10" width="28" height="15" fill="#0f172a" rx="2"/> <!-- Priekinis stiklas -->
-                    <rect x="4" y="38" width="28" height="12" fill="#0f172a" rx="2"/> <!-- Galinis stiklas -->
-                    <circle cx="6" cy="4" r="3" fill="#fef08a"/> <!-- Žibintai -->
+                    <rect x="4" y="10" width="28" height="15" fill="#0f172a" rx="2"/>
+                    <rect x="4" y="38" width="28" height="12" fill="#0f172a" rx="2"/>
+                    <circle cx="6" cy="4" r="3" fill="#fef08a"/>
                     <circle cx="30" cy="4" r="3" fill="#fef08a"/>
                     <text x="18" y="34" fill="#ffffff" font-weight="800" font-size="16" text-anchor="middle">1</text>
                 </g>
-                <!-- Automobilis 2 (Mėlynas) -->
                 <g transform="translate(310, 145)">
                     <rect x="0" y="0" width="60" height="36" rx="6" fill="#2563eb" stroke="#1d4ed8" stroke-width="2"/>
                     <rect x="35" y="4" width="15" height="28" fill="#0f172a" rx="2"/>
@@ -370,12 +362,10 @@
                 <line x1="200" y1="0" x2="200" y2="400" stroke="#ffffff" stroke-width="2" stroke-dasharray="8,8"/>
                 <line x1="0" y1="200" x2="400" y2="200" stroke="#ffffff" stroke-width="2" stroke-dasharray="8,8"/>
                 
-                <!-- Realistiškas ženklo stulpas ir ženklas Nr. 201 "Pagrindinis kelias" -->
                 <g transform="translate(90, 290)">
                     <rect x="-2" y="-2" width="28" height="28" transform="rotate(45)" fill="#ffffff"/>
                     <rect x="2" y="2" width="20" height="20" transform="rotate(45)" fill="#eab308"/>
                 </g>
-                <!-- Ženklas Nr. 203 "Duoti kelią" dešinėje (apverstas trikampis) -->
                 <g transform="translate(290, 90)">
                     <polygon points="0,0 30,0 15,26" fill="#ffffff" stroke="#dc2626" stroke-width="3"/>
                 </g>
@@ -398,7 +388,6 @@
                 <rect x="130" y="0" width="140" height="400" fill="#334155"/>
                 <rect x="0" y="130" width="400" height="140" fill="#334155"/>
                 <line x1="200" y1="0" x2="200" y2="400" stroke="#ffffff" stroke-width="2" stroke-dasharray="6,6"/>
-                <!-- Manevro trajektorijos linija -->
                 <path d="M 230 310 Q 230 180 70 180" fill="none" stroke="#f59e0b" stroke-width="4" stroke-dasharray="8,4" stroke-linecap="round"/>
                 
                 <g transform="translate(215, 310)">
@@ -411,23 +400,19 @@
                 </g>
             </svg>`,
 
-            // IDENTIŠKI LIETUVOS KET STANDARTAMS ŽENKLAI
             zenklasStop: `
             <svg viewBox="0 0 100 100" width="130">
-                <!-- Oficialus reguliarus aštuonkampis raudonas STOP ženklas -->
                 <polygon points="30,5 70,5 95,30 95,70 70,95 30,95 5,70 5,30" fill="#dc2626" stroke="#ffffff" stroke-width="3"/>
                 <text x="50" y="58" font-family="'Plus Jakarta Sans', sans-serif" font-size="22" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="1">STOP</text>
             </svg>`,
             
             zenklasApsisukimas: `
             <svg viewBox="0 0 100 100" width="130">
-                <!-- Oficialus mėlynas kvadratas Nr. 515 -->
                 <rect x="5" y="5" width="90" height="90" rx="6" fill="#1d4ed8" stroke="#ffffff" stroke-width="3"/>
                 <path d="M 50 80 L 50 42 Q 50 22 70 22 Q 82 22 82 37 L 82 45 M 68 40 L 82 54 L 96 40" fill="none" stroke="#ffffff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>`
         };
 
-        // --- 30 KLAUSIMŲ DUOMENŲ BAZĖ (OFICIALI TERMINOLOGIJA) ---
         const questionPool = [
             { 
                 text: "Kokia tvarka transporto priemonės važiuos per šią nereguliuojamą lygiareikšmių kelių sankryžą?", 
@@ -475,7 +460,7 @@
                 explanation: "Pagal KET 73.2 punktą: Mirksintis žalias signalas leidžia eismą ir įspėja, kad jo laikas baigiasi ir netrukus bus įjungtas draudžiamasis signalas."
             },
             {
-                text: "Koriai eismo dalyviai transporto priemones privalo vairuoti turėdami visišką (0,0 promilių) blaivumą?",
+                text: "Kuri eismo dalyviai transporto priemones privalo vairuoti turėdami visišką (0,0 promilių) blaivumą?",
                 svg: null, options: ["Pradedantieji vairuotojai, taksi automobilių, motociklų bei mopedų vairuotojai", "Visi vairuotojai, kurių amžius viršija 50 metų", "Tik asmenys, kurie vykdo tarptautinius krovinių pervežimus"], correct: 0,
                 explanation: "Pagal Lietuvos Respublikos SEAKĮ, pradedantiesiems, motociklų, mopedų, taksi ir komercinio transporto vairuotojams galioja absoliuti 0,0 promilės norma."
             },
@@ -497,7 +482,7 @@
             {
                 text: "Kuriose iš išvardintų vietų transporto priemonėms yra draudžiama apsisukti?",
                 svg: null, options: ["Geležinkelio pervažose, tuneliuose, ant tiltų, estakadų, viadukų ir po jais", "Sankryžose, kuriose įrengtas šviesoforinis reguliavimas", "Keliuose, kurie turi tik po vieną eismo juostą kiekviena kryptimi"], correct: 0,
-                explanation: "Pagal KET 94 punktą: Apsisukti draudžiama geležinkelio pervažose, tuneliuose, ant tiltų, viadukų, estakadų ir po jais, taip pat riboto matomumo vietose."
+                explanation: "Pagal KET 94 punktą: Apsisukti draudžiama geležinkelio pervažose, tuneliuose, ant tiltų, viadukų, estakadų ir po jais, taip pat rimto matomumo vietose."
             },
             {
                 text: "Kas turi pirmenybę, kai maršrutinis transportas gyvenvietėje pradeda važiuoti iš pažymėtos stotelės?",
@@ -507,7 +492,7 @@
             {
                 text: "Kokiu maksimaliu greičiu leidžiama vilkti motorinę transporto priemonę standžia ar lanksčia jungtimi?",
                 svg: null, options: ["Ne didesniu kaip 50 km/h greičiu", "Ne didesniu kaip 70 km/h greičiu", "Greitis neribojamas, jeigu jungtis yra standi"], correct: 0,
-                explanation: "Pagal KET 140 punktą: Vilkti transporto priemones motorine transporto priemonė leidžiama ne didesniu kaip 50 km/h greičiu."
+                explanation: "Pagal KET 140 punktą: Vilkti transporto priemones motorine transporto priemone leidžiama ne didesniu kaip 50 km/h greičiu."
             },
             {
                 text: "Ar privaloma prisegti saugos diržus keleiviams, sėdintiems transporto priemonės galinėse sėdynėse?",
@@ -591,7 +576,6 @@
             }
         ];
 
-        // --- SHUFFLE ---
         function fisherYatesShuffle(array) {
             let currentIndex = array.length, randomIndex;
             while (currentIndex != 0) {
